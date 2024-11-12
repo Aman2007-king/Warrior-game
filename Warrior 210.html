@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warrior Game Script</title>
+</head>
+<body>
+    <h1>Warrior Game Script</h1>
+    <pre>
+<code>
+import random
+
+class Character:
+    def __init__(self, name, health, attack_power):
+        self.name = name
+        self.health = health
+        self.attack_power = attack_power
+    
+    def attack(self, other):
+        damage = random.randint(1, self.attack_power)
+        other.health -= damage
+        print(f"{self.name} attacks {other.name} for {damage} damage!")
+        return other.health <= 0
+
+class Player(Character):
+    def __init__(self, name, health, attack_power, weapons):
+        super().__init__(name, health, attack_power)
+        self.weapons = weapons
+    
+    def select_weapon(self):
+        weapon = random.choice(self.weapons)
+        self.attack_power += weapon['power']
+        print(f"{self.name} selects {weapon['name']}!")
+
+class Enemy(Character):
+    pass
+
+def main():
+    weapons = [{'name': 'Sword', 'power': 5}, {'name': 'Axe', 'power': 7}, {'name': 'Bow', 'power': 3}]
+    player = Player("Warrior", 100, 10, weapons)
+    
+    enemies = [
+        Enemy("Goblin", 30, 5),
+        Enemy("Troll", 50, 7),
+        Enemy("Dragon", 100, 15)
+    ]
+
+    challenges = [
+        {"description": "Fight a Goblin", "enemy": enemies[0]},
+        {"description": "Fight a Troll", "enemy": enemies[1]},
+        {"description": "Fight a Dragon", "enemy": enemies[2]}
+    ]
+    
+    for challenge in challenges:
+        print(f"Challenge: {challenge['description']}")
+        player.select_weapon()
+        enemy = challenge['enemy']
+        
+        while player.health > 0 and enemy.health > 0:
+            if player.attack(enemy):
+                print(f"{enemy.name} is defeated!")
+                break
+            
+            if enemy.attack(player):
+                print(f"{player.name} is defeated!")
+                break
+        
+        if player.health <= 0:
+            print("Game Over!")
+            break
+
+if __name__ == "__main__":
+    main()
+</code>
+    </pre>
+</body>
+</html>
